@@ -6,12 +6,14 @@ class LoginContract {
         val name: String = "",
         val password: String = "",
         val errorMsg: String = "",
-        val userLogged: Boolean = false
+        val userLogged: Boolean = false,
+        val isLoading: Boolean = false
     )
 
     sealed class Event {
         data class OnUsernameChanged(val username: String) : Event()
         data class OnPasswordChanged(val password: String) : Event()
         data object OnLogInClick: Event()
+        data object OnForgotPasswordClick: Event()
     }
 }

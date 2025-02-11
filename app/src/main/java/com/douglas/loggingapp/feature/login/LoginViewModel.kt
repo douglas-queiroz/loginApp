@@ -21,10 +21,13 @@ class LoginViewModel(
             is LoginContract.Event.OnUsernameChanged -> state = state.copy(name = event.username)
             is LoginContract.Event.OnPasswordChanged -> state = state.copy(password = event.password)
             is LoginContract.Event.OnLogInClick -> login()
+            is LoginContract.Event.OnForgotPasswordClick -> {  } // TODO: To be implemented
         }
     }
 
     private fun login() = viewModelScope.launch {
+        state = state.copy(isLoading = true)
+
         val response = loggingApi.logIn(
             userName = state.name,
             password = state.password
@@ -33,12 +36,14 @@ class LoginViewModel(
         state = if (response.token.isNullOrBlank() || response.refreshToken.isNullOrBlank()) {
             state.copy(
                 errorMsg = "User and password doesn't match",
-                userLogged = false
+                userLogged = false,
+                isLoading = false
             )
         } else {
             state.copy(
                 errorMsg = "",
-                userLogged = true
+                userLogged = true,
+                isLoading = false
             )
         }
     }
